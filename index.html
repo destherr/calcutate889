@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras</title>
+    <style>
+        /* Estilos básicos y responsivos */
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        .product-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            width: 100%;
+        }
+
+
+
+
+        input[type="number"]
+        {
+            padding: 8px;
+            width: 55%;
+        }
+
+
+
+
+        
+
+
+        button {
+            margin-top: 10px;
+            padding: 5px;
+            font-size: 15px;
+            cursor: pointer;
+            width: 50%;
+        }
+
+        #total-price {
+            font-weight: bold;
+        }
+        .remove-btn {
+    background-color: red;
+    width: 20px;
+    color: white;
+    border: none;
+    padding: 1px 2px; /* Ajusta el padding para hacerlo más pequeño */
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px; /* Reduce el tamaño de la fuente */
+    border-radius: 4px;
+}
+    </style>
+</head>
+<body>
+
+    <h1>Compras</h1>
+    <h2>Total: S/<span id="total-price">0.00</span></h2>
+
+    <div class="product-container" id="product-container"></div>
+    <button id="add-product-btn">Agregar Producto</button>
+
+    <script>
+        const addProductBtn = document.getElementById('add-product-btn');
+        const productContainer = document.getElementById('product-container');
+        const totalPriceEl = document.getElementById('total-price');
+        let total = 0;
+
+        // Función para agregar un nuevo producto
+        function addProduct() {
+            // Crear contenedor de producto
+            const productItem = document.createElement('div');
+            productItem.classList.add('product-item');
+
+            // Crear input para el nombre del producto
+            const nameInput = document.createElement('input');
+            nameInput.type = 'text';
+           
+
+            // Crear input para el precio del producto
+            const priceInput = document.createElement('input');
+            priceInput.type = 'number';
+           
+            priceInput.min = '0';
+            priceInput.step = '0.01';
+
+            // Evento para actualizar el precio total
+            priceInput.addEventListener('input', updateTotalPrice);
+
+            // Crear botón de eliminar
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = 'X';
+            removeBtn.classList.add('remove-btn');
+            removeBtn.addEventListener('click', () => {
+                productItem.remove();
+                updateTotalPrice();
+            });
+
+            // Añadir inputs y botón de eliminar al contenedor de producto
+            productItem.appendChild(nameInput);
+            productItem.appendChild(priceInput);
+            productItem.appendChild(removeBtn);
+
+            // Añadir el producto al contenedor principal
+            productContainer.appendChild(productItem);
+        }
+
+        // Función para actualizar el precio total
+        function updateTotalPrice() {
+            const priceInputs = productContainer.querySelectorAll('input[type="number"]');
+            total = Array.from(priceInputs).reduce((sum, input) => sum + parseFloat(input.value || 0), 0);
+            totalPriceEl.textContent = total.toFixed(2);
+        }
+
+        // Evento para agregar un nuevo producto cuando se presiona el botón
+        addProductBtn.addEventListener('click', addProduct);
+
+        // Confirmación al intentar cerrar la pestaña
+        window.addEventListener('beforeunload', (event) => {
+            event.preventDefault();
+            event.returnValue = '';
+        });
+    </script>
+
+</body>
+</html>
